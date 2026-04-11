@@ -1,0 +1,14 @@
+{
+  "id": "menu",
+  "slug": "menu",
+  "title": "Menu",
+  "cat": "Menu",
+  "show_in_works": true,
+  "thumbnail": "/images/uploads/menu.webp",
+  "blocks": [
+    {
+      "type": "text",
+      "text": "こだわりの豆と丁寧な抽出。季節ごとに変わるドリンクと、手作りのフードメニューをご用意しています。"
+    }
+  ]
+}

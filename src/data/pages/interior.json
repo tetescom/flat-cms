@@ -1,0 +1,14 @@
+{
+  "id": "interior",
+  "slug": "interior",
+  "title": "Interior",
+  "cat": "Shop",
+  "show_in_works": true,
+  "thumbnail": "/images/uploads/interior.webp",
+  "blocks": [
+    {
+      "type": "text",
+      "text": "木のぬくもりと自然光が差し込む、落ち着いた空間。ゆっくりと流れる時間の中で、コーヒーをお楽しみください。"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+DirectoryIndex index.php index.html
+ErrorDocument 404 /404.php
+
+RewriteEngine On
+
+# sitemap.xml → sitemap.php
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# クリーンURL → PHPファイルへ内部転送
+RewriteRule ^news/?$ php/news.php [L]
+RewriteRule ^news/([a-zA-Z0-9_\-]+)/?$ php/post-single.php?id=$1 [L,QSA]
+RewriteRule ^blog/?$ php/blog.php [L]
+RewriteRule ^category/([a-zA-Z0-9_\-]+)/?$ php/category.php?slug=$1 [L,QSA]

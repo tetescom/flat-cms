@@ -1,0 +1,14 @@
+{
+  "id": "cake",
+  "slug": "cake",
+  "title": "Seasonal Cake",
+  "cat": "Food",
+  "show_in_works": true,
+  "thumbnail": "/images/uploads/cake.webp",
+  "blocks": [
+    {
+      "type": "text",
+      "text": "地元のパティシエと共同制作した、季節の素材を使ったこだわりのケーキ。"
+    }
+  ]
+}

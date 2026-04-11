@@ -1,0 +1,7 @@
+[
+  {"slug": "info",    "label": "お知らせ"},
+  {"slug": "coffee",  "label": "Coffee"},
+  {"slug": "food",    "label": "Food"},
+  {"slug": "event",   "label": "Event"},
+  {"slug": "blog",    "label": "ブログ"}
+]

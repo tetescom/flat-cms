@@ -1,0 +1,25 @@
+# 個人情報・認証情報
+src/data/config.json
+
+# ビルド生成物
+flatcms-dist.zip
+flatcms-demo.zip
+_dist_tmp/
+_demo_tmp/
+
+# デモ画像（著作権あり）
+src/images/uploads/hero.webp
+src/images/uploads/cake.webp
+src/images/uploads/coffee.webp
+src/images/uploads/interior.webp
+src/images/uploads/menu.webp
+
+# ゴミ箱データ
+src/data/trash/
+
+# OS・エディタ生成ファイル
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.vscode/

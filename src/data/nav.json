@@ -1,0 +1,7 @@
+[
+  {"label": "About",   "url": "{base}#about"},
+  {"label": "Menu",    "url": "{base}#works"},
+  {"label": "News",    "url": "{base}news"},
+  {"label": "Blog",    "url": "{base}blog"},
+  {"label": "Contact", "url": "{base}#contact"}
+]

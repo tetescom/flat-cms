@@ -1,0 +1,14 @@
+{
+  "id": "coffee",
+  "slug": "coffee",
+  "title": "Espresso & Latte",
+  "cat": "Coffee",
+  "show_in_works": true,
+  "thumbnail": "/images/uploads/coffee.webp",
+  "blocks": [
+    {
+      "type": "text",
+      "text": "深みのあるエスプレッソと、なめらかなミルクのラテ。どちらもバリスタが一杯ずつ丁寧に仕上げます。"
+    }
+  ]
+}

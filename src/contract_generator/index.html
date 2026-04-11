@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>業務委託契約書ジェネレーター</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f5f5f0;color:#1a1a1a;padding:2rem 1rem}
+h1{font-size:20px;font-weight:600;margin-bottom:1.5rem;color:#1a1a1a}
+.wrap{max-width:720px;margin:0 auto}
+.section{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.section-title{font-size:12px;font-weight:600;color:#888;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid #f0f0e8}
+.row{display:grid;gap:12px;margin-bottom:12px}
+.row.col2{grid-template-columns:1fr 1fr}
+.row.col3{grid-template-columns:1fr 1fr 1fr}
+label{display:block;font-size:13px;color:#666;margin-bottom:4px}
+input,textarea{width:100%;font-size:14px;color:#1a1a1a;background:#fafaf8;border:1px solid #ddd;border-radius:8px;padding:8px 10px;font-family:inherit;outline:none}
+input:focus,textarea:focus{border-color:#999}
+textarea{resize:vertical;min-height:60px}
+.tip{font-size:12px;color:#aaa;margin-top:4px}
+.split-box{background:#fafaf8;border-radius:8px;padding:8px 12px}
+.split-box .lbl{font-size:12px;color:#888}
+.split-box .val{font-size:15px;font-weight:600;color:#1a1a1a}
+#gen-btn{background:#1a1a1a;color:#fff;border:none;border-radius:8px;padding:11px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+#gen-btn:hover{background:#333}
+#status{font-size:13px;color:#888;margin-top:10px;text-align:right;min-height:18px}
+@media(max-width:560px){.row.col2,.row.col3{grid-template-columns:1fr}}
+
+/* プレビュー */
+#preview{display:none;max-width:720px;margin:2rem auto 0}
+#print-btn{background:#1a1a1a;color:#fff;border:none;border-radius:8px;padding:11px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:1.5rem}
+#print-btn:hover{background:#333}
+#back-btn{background:#fff;color:#1a1a1a;border:1px solid #ccc;border-radius:8px;padding:11px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:1.5rem;margin-right:10px}
+#back-btn:hover{background:#f5f5f0}
+
+/* 契約書本文 */
+#contract{background:#fff;padding:40px 50px;font-family:'MS Mincho','Yu Mincho',serif;font-size:10pt;line-height:1.7;color:#000}
+#contract h2{font-size:13pt;font-weight:bold;text-align:center;margin-bottom:1.5em}
+.clause{margin-bottom:0}
+.clause-title{font-weight:bold;margin-top:1em;margin-bottom:0.2em;page-break-after:avoid}
+.clause-body{text-align:justify}
+.clause-body p{margin-bottom:0.2em}
+.clause-body .indent{padding-left:2em}
+.clause-body .indent2{padding-left:1em}
+.underline{text-decoration:underline}
+.sign-block{margin-top:2em;page-break-inside:avoid}
+.sign-block p{margin-bottom:0.4em}
+
+@media print{
+  body{background:#fff;padding:0}
+  #preview-controls{display:none}
+  #contract{padding:15mm 20mm;box-shadow:none}
+  .clause-title{page-break-after:avoid}
+  @page{margin:20mm 15mm 15mm 15mm;@bottom-center{content:counter(page)}}
+}
+</style>
+</head>
+<body>
+
+<!-- フォーム -->
+<div id="form-wrap">
+<div class="wrap">
+  <h1>業務委託契約書ジェネレーター</h1>
+
+  <div class="section">
+    <div class="section-title">甲（委託者）</div>
+    <div class="row">
+      <div><label>会社名 / 氏名</label><input id="ko-name" type="text" placeholder="例：株式会社〇〇"></div>
+    </div>
+    <div class="row col2">
+      <div><label>住所</label><input id="ko-addr" type="text" placeholder="例：岩手県一関市〇〇"></div>
+      <div><label>担当者名</label><input id="ko-person" type="text" placeholder="例：山田 太郎"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">乙（受託者）</div>
+    <div class="row col2">
+      <div><label>会社名 / 氏名</label><input id="otsu-name" type="text" placeholder="例：株式会社△△"></div>
+      <div><label>住所</label><input id="otsu-addr" type="text" placeholder="例：岩手県一関市〇〇"></div>
+    </div>
+    <div class="row">
+      <div><label>担当者名</label><input id="otsu-person" type="text" placeholder="例：鈴木 花子"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">業務内容</div>
+    <div class="row">
+      <div>
+        <label>業務の説明</label>
+        <textarea id="work-desc" placeholder="ウェブサイトのデザインおよびコーディング業務"></textarea>
+        <div class="tip">「別紙見積書または仕様書に記載された〇〇業務」の〇〇部分</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">納期・資料提供期限</div>
+    <div class="row col2">
+      <div><label>資料提供期限（甲）</label><input id="data-deadline" type="date"></div>
+      <div><label>納期（乙）</label><input id="deadline" type="date"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">金額</div>
+    <div class="row">
+      <div><label>委託料（税別・円）</label><input id="total-fee" type="number" placeholder="例：500000" min="0" step="1000" oninput="updateSplit()"></div>
+    </div>
+    <div class="row">
+      <div>
+        <label>着手金の割合</label>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+          <input type="range" id="ratio-slider" min="0" max="100" value="50" step="10" style="flex:1" oninput="updateSplit()">
+          <span id="ratio-label" style="font-size:14px;font-weight:600;min-width:80px">50% / 50%</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div class="split-box"><div class="lbl">着手金</div><div class="val" id="advance-disp">—</div></div>
+          <div class="split-box"><div class="lbl">残金</div><div class="val" id="balance-disp">—</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">オプション設定</div>
+    <div class="row col3">
+      <div><label>検収期間（日）</label><input id="inspection-days" type="number" value="7" min="1" max="30"></div>
+      <div><label>瑕疵担保期間（ヶ月）</label><input id="warranty-months" type="number" value="3" min="1" max="12"></div>
+      <div><label>遅延損害金（年率 %）</label><input id="penalty-rate" type="number" value="14.6" min="1" max="20" step="0.1"></div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;margin-top:1.5rem">
+    <div style="text-align:right">
+      <button id="gen-btn" onclick="generate()">プレビューを表示</button>
+      <div id="status"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- プレビュー -->
+<div id="preview">
+  <div id="preview-controls">
+    <button id="back-btn" onclick="showForm()">← 戻る</button>
+    <button id="print-btn" onclick="window.print()">印刷 / PDFで保存</button>
+  </div>
+  <div id="contract"></div>
+</div>
+
+<script>
+function updateSplit() {
+  const ratio = parseInt(document.getElementById('ratio-slider').value);
+  const total = parseInt(document.getElementById('total-fee').value) || 0;
+  document.getElementById('ratio-label').textContent = ratio + '% / ' + (100 - ratio) + '%';
+  const adv = Math.round(total * ratio / 100);
+  const bal = total - adv;
+  document.getElementById('advance-disp').textContent = total ? adv.toLocaleString() + '円' : '—';
+  document.getElementById('balance-disp').textContent = total ? bal.toLocaleString() + '円' : '—';
+}
+
+function toWareki(dateStr) {
+  const d = new Date(dateStr);
+  const reiwa = d.getFullYear() - 2018;
+  return '令和' + reiwa + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日';
+}
+function fmt(n) { return n.toLocaleString(); }
+
+function showForm() {
+  document.getElementById('form-wrap').style.display = '';
+  document.getElementById('preview').style.display = 'none';
+}
+
+function clause(title, ...paras) {
+  return `<div class="clause"><div class="clause-title">${title}</div><div class="clause-body">${paras.join('')}</div></div>`;
+}
+function p(text, cls='') { return `<p class="${cls}">${text}</p>`; }
+
+function generate() {
+  const koName = document.getElementById('ko-name').value.trim();
+  const koAddr = document.getElementById('ko-addr').value.trim();
+  const koPerson = document.getElementById('ko-person').value.trim();
+  const otsuName = document.getElementById('otsu-name').value.trim();
+  const otsuAddr = document.getElementById('otsu-addr').value.trim();
+  const otsuPerson = document.getElementById('otsu-person').value.trim();
+  const workDesc = document.getElementById('work-desc').value.trim() || 'ウェブサイトのデザインおよびコーディング業務';
+  const dataDeadlineRaw = document.getElementById('data-deadline').value;
+  const deadlineRaw = document.getElementById('deadline').value;
+  const totalFee = parseInt(document.getElementById('total-fee').value) || 0;
+  const ratio = parseInt(document.getElementById('ratio-slider').value);
+  const advance = Math.round(totalFee * ratio / 100);
+  const balance = totalFee - advance;
+  const inspDays = document.getElementById('inspection-days').value;
+  const warrantyMonths = document.getElementById('warranty-months').value;
+  const penaltyRate = document.getElementById('penalty-rate').value;
+
+  if (!koName || !deadlineRaw || !dataDeadlineRaw || !totalFee) {
+    document.getElementById('status').textContent = '甲の名前・資料提供期限・納期・委託料を入力してください';
+    return;
+  }
+
+  const deadlineStr = toWareki(deadlineRaw);
+  const dataDeadlineStr = toWareki(dataDeadlineRaw);
+
+  const html = `
+    <h2>業務委託契約書</h2>
+    <div class="clause"><div class="clause-body"><p>${koName}（以下「甲」という）と、${otsuName}（以下「乙」という）は、${workDesc}（以下「本業務」という）に関し、以下の通り業務委託契約（以下「本契約」という）を締結する。</p></div></div>
+
+    ${clause('第1条（目的・業務内容）',
+      p(`甲は乙に対し、別紙「見積書」または「仕様書」に記載された${workDesc}（以下「本成果物」という）を委託し、乙はこれを受託する。`)
+    )}
+
+    ${clause('第2条（制作期間・納期）',
+      p(`乙は、甲に対し、本成果物を${deadlineStr}までに納入するものとする。甲による資料提供の遅延や仕様変更等、やむを得ない事由により納期までの納入が困難となった場合、甲乙協議の上、納期を変更することができる。`)
+    )}
+
+    ${clause('第3条（委託料および支払方法）',
+      p(`本業務の委託料は、金${fmt(totalFee)}円（消費税別）とする。甲は、乙の発行する請求書に基づき、以下の通り委託料を乙の指定する銀行口座に振り込むものとする。なお、振込手数料は甲の負担とする。`),
+      p(`（1）<span class="underline">着手金：金${fmt(advance)}円（消費税別）</span>`, 'indent'),
+      p('乙は本契約締結後速やかに請求書を発行し、甲は請求書発行日から10日以内にこれを支払う。', 'indent'),
+      p(`（2）<span class="underline">残金：金${fmt(balance)}円（消費税別）</span>`, 'indent'),
+      p('乙は第7条に基づく検収完了後に請求書を発行し、甲は請求書発行日から10日以内にこれを支払う。', 'indent'),
+      p(`仕様変更や追加作業が発生した場合、別途協議の上、追加費用を定めるものとする。甲が前項の支払期日までに委託料を支払わない場合、甲は乙に対し、支払期日の翌日から支払済みに至るまで、年${penaltyRate}％の割合による遅延損害金を支払うものとする。`)
+    )}
+
+    ${clause('第4条（資料・データの提供）',
+      p(`甲は、本業務の遂行に必要な資料・データ・素材等（以下「提供データ」という）を、${dataDeadlineStr}までに乙に提供するものとする。`),
+      p('提供データが当該期日までに提供されなかった場合、乙は納期を提供の遅延期間に応じて延長することができる。また、提供の遅延によって生じた追加作業については、別途費用を請求できるものとする。'),
+      p('甲は、提供データが第三者の著作権その他の権利を侵害しないことを保証するものとし、万一問題が生じた場合は甲の責任において解決するものとする。')
+    )}
+
+    ${clause('第5条（デザインカンプの承認）',
+      p('乙は、コーディング着手前にデザインカンプを画像データとして甲に提示するものとする。'),
+      p('甲は、提示を受けた日から7日以内に書面（電子メールを含む）にて承認または修正依頼を乙に通知するものとする。当該期間内に通知がない場合、甲はデザインカンプの内容に承認したものとみなす。'),
+      p('承認後のデザイン変更は仕様変更として扱い、別途費用および納期の再調整が生じる場合がある。')
+    )}
+
+    ${clause('第6条（納品・検収）',
+      p(`乙は、契約納期までに本成果物を甲に納品（テストサーバーへのアップロードまたはデータ送付）する。甲は、納品後${inspDays}日以内に本成果物の検査を行い、合格・不合格を乙に通知する。当該期間内に通知がない場合、検査に合格したものとみなす（検収完了）。`)
+    )}
+
+    ${clause('第7条（契約不適合責任・瑕疵担保）',
+      p(`検収完了後${warrantyMonths}ヶ月以内に、本成果物に契約内容と異なる不具合（バグ、リンク切れ、表示崩れ等）が発見された場合、乙は無償で修補を行う。`),
+      p('ただし、以下の場合は無償修補の対象外とし、有償での対応とする。'),
+      p('・甲の指示による仕様変更に起因する場合', 'indent2'),
+      p('・甲または第三者による修正・改変に起因する場合', 'indent2'),
+      p('・CMS（WordPress等）やプラグインのアップデートに起因する不具合', 'indent2')
+    )}
+
+    ${clause('第8条（知的財産権の帰属）',
+      p('本成果物の著作権（著作権法第27条及び第28条の権利を含む）は、委託料の全額支払いが完了した時点で、乙から甲へ移転するものとする。ただし、乙が以前から保有していたプログラム、汎用的なライブラリ、第三者が著作権を持つ素材（フォント、画像等）に関する権利は、甲に移転しない。乙は、本成果物を自身の制作実績（ポートフォリオ）として公開できるものとする。ただし、甲から事前の不同意の申し出があった場合はこの限りではない。')
+    )}
+
+    ${clause('第9条（秘密保持）',
+      p('甲および乙は、本契約の遂行により知り得た相手方の技術上・営業上の秘密情報を、相手方の書面による承諾なく第三者に開示・漏洩してはならない。')
+    )}
+
+    ${clause('第10条（契約の解除・中途解約）',
+      p('１．甲または乙は、相手方が本契約の条項に違反し、相当の期間を定めて催告したにもかかわらず是正されない場合、本契約を解除することができる。'),
+      p('２．甲の都合により本契約を中途解約する場合、乙は受領済みの着手金を返還しないものとする。なお、解約時点での作業進捗にかかわらず、乙は着手金を超える金銭の請求は原則として行わないものとする。'),
+      p('３．前項の規定にかかわらず、第7条に基づく本成果物の納品が行われた後に甲の都合により本契約を解除する場合、甲は委託料の全額（残金を含む）を支払うものとする。'),
+      p('４．第2項の場合において、着手金の支払いが完了している場合に限り、乙は解約時点での仕掛品（作りかけの成果物）を甲に引き渡すものとする。')
+    )}
+
+    ${clause('第11条（協議事項・管轄裁判所）',
+      p(`本契約に定めのない事項または疑義が生じた事項については、甲乙誠意をもって協議し解決する。本契約に関する紛争については、${koAddr}を管轄する地方裁判所を第一審の専属的合意管轄裁判所とする。`)
+    )}
+
+    ${clause('第12条（担当者および連絡窓口）',
+      p('甲および乙は、本契約の履行にあたり、それぞれ以下の担当者を窓口として定める。'),
+      p('甲の担当者：' + (koPerson || '　　　　　　　　'), 'indent2'),
+      p('乙の担当者：' + (otsuPerson || '　　　　　　　　'), 'indent2'),
+      p('本契約に関する連絡・確認・協議は、原則として上記担当者間で行うものとし、担当者間で合意した事項は、各当事者の合意とみなす。ただし、契約内容の変更や追加費用の確定等、契約上の重要事項については、書面（電子メールを含む）による確認をもって正式な合意とする。'),
+      p('担当者を変更する場合は、速やかに相手方に書面にて通知するものとする。')
+    )}
+
+    <div class="clause"><div class="clause-body"><p>本契約の成立を証するため、本書2通を作成し、甲乙記名押印の上、各1通を保有する。</p></div></div>
+
+    <div class="sign-block">
+      <p>令和　　　年　　　月　　　日</p>
+      <br><br>
+      <p>（甲）</p>
+      <p>住所：${koAddr || '　　　　　　　　　　　　　　　　　　　　'}</p>
+      <p>氏名/会社名：${koName}</p>
+      <p>担当者：${koPerson || '　　　　　　　　'}</p>
+      <p style="text-align:right">印</p>
+      <br>
+      <p>（乙）</p>
+      <p>住所：${otsuAddr || '　　　　　　　　　　　　　　　　　　　　'}</p>
+      <p>氏名/会社名：${otsuName}</p>
+      <p>担当者：${otsuPerson || '　　　　　　　　'}</p>
+      <p style="text-align:right">印</p>
+    </div>
+  `;
+
+  document.getElementById('contract').innerHTML = html;
+  document.getElementById('form-wrap').style.display = 'none';
+  document.getElementById('preview').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>

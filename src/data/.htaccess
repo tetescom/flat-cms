@@ -1,0 +1,5 @@
+Deny from all
+<Files "style.css">
+  Allow from all
+  Satisfy Any
+</Files>
