@@ -6,7 +6,17 @@ if (empty($_SESSION['csrf_token'])) {
 // SEO設定を読み込む
 $seo_file = __DIR__ . '/../data/seo.json';
 $seo = file_exists($seo_file) ? json_decode(file_get_contents($seo_file), true) ?? [] : [];
-$base_path = '/';
+$_bp_cfg = __DIR__ . '/../admin/config.json';
+$base_path = file_exists($_bp_cfg) ? (json_decode(file_get_contents($_bp_cfg), true)['base_path'] ?? '/') : '/';
+unset($_bp_cfg);
+if (!function_exists('flatcms_asset')) {
+    function flatcms_asset(string $path): string {
+        if (empty($path)) return '';
+        if (str_starts_with($path, 'http')) return $path;
+        global $base_path;
+        return rtrim($base_path, '/') . '/' . ltrim($path, '/');
+    }
+}
 $site_title = $seo['site_title'] ?? 'Aroma Coffee';
 $separator  = $seo['title_separator'] ?? ' — ';
 $page_title = isset($page_title) ? $page_title . $separator . $site_title : $site_title;

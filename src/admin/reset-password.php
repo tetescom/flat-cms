@@ -1,5 +1,5 @@
 <?php
-$config_file = dirname(__DIR__) . '/data/config.json';
+$config_file = __DIR__ . '/config.json';
 if (!file_exists($config_file)) {
     header('Location: ./install.php');
     exit;

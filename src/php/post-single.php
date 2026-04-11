@@ -6,8 +6,9 @@ $data_dir = dirname(__DIR__) . '/data/news/';
 $file = $data_dir . $id . '.json';
 
 if (!$id || !file_exists($file)) {
-    header('Location: /news');
-    exit;
+    $_bp_cfg = __DIR__ . '/../admin/config.json';
+    $_bp = file_exists($_bp_cfg) ? (json_decode(file_get_contents($_bp_cfg), true)['base_path'] ?? '/') : '/';
+    header('Location: ' . $_bp . 'news'); exit;
 }
 $article = json_decode(file_get_contents($file), true);
 
@@ -36,11 +37,11 @@ foreach ($cats_data as $c) { if ($c['label'] === $article['cat']) { $cat_slug = 
 // パンくずの親リンク（ブログカテゴリならブログ、それ以外はお知らせ）
 $is_blog = ($article['cat'] ?? '') === 'ブログ';
 $parent_label = $is_blog ? 'ブログ' : 'お知らせ';
-$parent_url   = $is_blog ? '/blog' : '/news';
+$parent_url   = $is_blog ? $base_path . 'blog' : $base_path . 'news';
 ?>
 
 <div class="breadcrumb">
-  <a href="/">HOME</a><span>›</span>
+  <a href="<?= $base_path ?>">HOME</a><span>›</span>
   <a href="<?= $parent_url ?>"><?= $parent_label ?></a><span>›</span>
   <?= htmlspecialchars($article['title']) ?>
 </div>
@@ -49,7 +50,7 @@ $parent_url   = $is_blog ? '/blog' : '/news';
   <div class="detail-meta">
     <span class="detail-date"><?= htmlspecialchars($article['date']) ?></span>
     <?php if ($cat_slug): ?>
-    <a href="/category/<?= htmlspecialchars($cat_slug) ?>" class="detail-cat" style="text-decoration:none;"><?= htmlspecialchars($article['cat']) ?></a>
+    <a href="<?= $base_path ?>category/<?= htmlspecialchars($cat_slug) ?>" class="detail-cat" style="text-decoration:none;"><?= htmlspecialchars($article['cat']) ?></a>
     <?php else: ?>
     <span class="detail-cat"><?= htmlspecialchars($article['cat']) ?></span>
     <?php endif; ?>
@@ -57,7 +58,7 @@ $parent_url   = $is_blog ? '/blog' : '/news';
   <h1 class="detail-title"><?= htmlspecialchars($article['title']) ?></h1>
   <?php if ($is_blog): ?>
   <div class="detail-thumbnail">
-    <img src="<?= !empty($article['thumbnail']) ? htmlspecialchars($article['thumbnail']) : htmlspecialchars($seo['no_image'] ?? '/images/uploads/no-image.webp') ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+    <img src="<?= htmlspecialchars(flatcms_asset(!empty($article['thumbnail']) ? $article['thumbnail'] : ($seo['no_image'] ?? '/images/uploads/no-image.webp'))) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
   </div>
   <?php endif; ?>
   <div class="detail-body">
@@ -71,11 +72,11 @@ $parent_url   = $is_blog ? '/blog' : '/news';
   </div>
   <div class="detail-nav">
     <?php if ($prev): ?>
-      <a href="/news/<?= $prev['id'] ?>" class="nav-prev"><?= htmlspecialchars($prev['title']) ?></a>
+      <a href="<?= $base_path ?>news/<?= $prev['id'] ?>" class="nav-prev"><?= htmlspecialchars($prev['title']) ?></a>
     <?php else: ?><span></span><?php endif; ?>
     <a href="<?= $parent_url ?>" class="nav-back">一覧へ戻る</a>
     <?php if ($next): ?>
-      <a href="/news/<?= $next['id'] ?>" class="nav-next"><?= htmlspecialchars($next['title']) ?></a>
+      <a href="<?= $base_path ?>news/<?= $next['id'] ?>" class="nav-next"><?= htmlspecialchars($next['title']) ?></a>
     <?php else: ?><span></span><?php endif; ?>
   </div>
 </div>

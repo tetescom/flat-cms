@@ -8,7 +8,7 @@ $about = file_exists($about_file) ? json_decode(file_get_contents($about_file), 
 <!-- HERO -->
 <section id="hero">
   <div class="hero-bg"></div>
-  <div class="hero-photo" <?php if (!empty($seo['hero_image'])): ?>style="background-image:url('<?= htmlspecialchars($seo['hero_image']) ?>')"<?php endif; ?>></div>
+  <div class="hero-photo" <?php if (!empty($seo['hero_image'])): ?>style="background-image:url('<?= htmlspecialchars(flatcms_asset($seo['hero_image'])) ?>')"<?php endif; ?>></div>
   <div class="hero-line"></div>
   <div class="hero-counter">AROMA COFFEE — SINCE 2019</div>
   <div class="hero-content">
@@ -109,7 +109,8 @@ $about = file_exists($about_file) ? json_decode(file_get_contents($about_file), 
       $tag   = htmlspecialchars($work['cat'] ?? '');
     ?>
     <a href="./pages/<?= $slug ?>.php" class="work-card reveal" style="text-decoration:none;color:inherit;">
-      <div class="work-bg" <?php if($thumb) echo 'style="background-image:url(' . $thumb . ');background-size:cover;background-position:center;"'; ?>></div>
+      <?php $thumb_url = htmlspecialchars(flatcms_asset($work['thumbnail'] ?? '')); ?>
+      <div class="work-bg" <?php if($thumb_url) echo 'style="background-image:url(' . $thumb_url . ');background-size:cover;background-position:center;"'; ?>></div>
       <div class="work-inner">
         <?php if ($tag): ?><p class="work-tag"><?= $tag ?></p><?php endif; ?>
         <h3 class="work-title"><?= htmlspecialchars($work['title']) ?></h3>
@@ -140,7 +141,7 @@ $about = file_exists($about_file) ? json_decode(file_get_contents($about_file), 
   ?>
   <div class="news-list">
     <?php foreach ($recent_news as $item): ?>
-    <a href="/news/<?= $item['id'] ?>" class="news-item reveal" style="text-decoration:none;color:inherit;">
+    <a href="<?= $base_path ?>news/<?= $item['id'] ?>" class="news-item reveal" style="text-decoration:none;color:inherit;">
       <span class="news-date"><?= htmlspecialchars($item['date']) ?></span>
       <span class="news-cat"><?= htmlspecialchars($item['cat']) ?></span>
       <span class="news-title"><?= htmlspecialchars($item['title']) ?></span>
@@ -151,7 +152,7 @@ $about = file_exists($about_file) ? json_decode(file_get_contents($about_file), 
     <?php endif; ?>
   </div>
   <div style="text-align:right; margin-top:40px;">
-    <a href="/news" class="btn-submit" style="display:inline-block;text-decoration:none;"><span>View All News</span></a>
+    <a href="<?= $base_path ?>news" class="btn-submit" style="display:inline-block;text-decoration:none;"><span>View All News</span></a>
   </div>
 </section>
 
@@ -162,11 +163,11 @@ $about = file_exists($about_file) ? json_decode(file_get_contents($about_file), 
   <h2 class="section-title reveal">ブログ</h2>
   <div class="blog-grid blog-grid-4">
     <?php foreach ($recent_blog as $item): ?>
-    <a href="/news/<?= $item['id'] ?>" class="blog-card reveal">
+    <a href="<?= $base_path ?>news/<?= $item['id'] ?>" class="blog-card reveal">
       <?php if (!empty($item['thumbnail'])): ?>
-        <img class="blog-thumb" src="<?= htmlspecialchars($item['thumbnail']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy">
+        <img class="blog-thumb" src="<?= htmlspecialchars(flatcms_asset($item['thumbnail'])) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy">
       <?php else: ?>
-        <img class="blog-thumb" src="<?= htmlspecialchars($seo['no_image'] ?? '/images/uploads/no-image.webp') ?>" alt="No Image" loading="lazy">
+        <img class="blog-thumb" src="<?= htmlspecialchars(flatcms_asset($seo['no_image'] ?? '/images/uploads/no-image.webp')) ?>" alt="No Image" loading="lazy">
       <?php endif; ?>
       <div class="blog-card-body">
         <div class="blog-meta">
@@ -178,7 +179,7 @@ $about = file_exists($about_file) ? json_decode(file_get_contents($about_file), 
     <?php endforeach; ?>
   </div>
   <div style="text-align:right; margin-top:40px;">
-    <a href="/blog" class="btn-submit" style="display:inline-block;text-decoration:none;"><span>View All Blog</span></a>
+    <a href="<?= $base_path ?>blog" class="btn-submit" style="display:inline-block;text-decoration:none;"><span>View All Blog</span></a>
   </div>
 </section>
 <?php endif; ?>

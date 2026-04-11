@@ -6,7 +6,7 @@ $og_desc    = !empty($page_data['blocks']) ? strip_tags($page_data['blocks'][0][
 include __DIR__ . '/header.php';
 ?>
 <div class="breadcrumb">
-  <a href="/">HOME</a><span>›</span>
+  <a href="<?= $base_path ?>">HOME</a><span>›</span>
   <?= htmlspecialchars($page_data['title']) ?>
 </div>
 <div class="detail-wrap">
@@ -14,7 +14,7 @@ include __DIR__ . '/header.php';
   <h1 class="detail-title"><?= htmlspecialchars($page_data['title']) ?></h1>
   <?php if (!empty($page_data['show_in_works'])): ?>
   <div class="detail-thumbnail">
-    <img src="<?= !empty($page_data['thumbnail']) ? htmlspecialchars($page_data['thumbnail']) : htmlspecialchars($seo['no_image'] ?? '/images/uploads/no-image.webp') ?>" alt="<?= htmlspecialchars($page_data['title']) ?>">
+    <img src="<?= htmlspecialchars(flatcms_asset(!empty($page_data['thumbnail']) ? $page_data['thumbnail'] : ($seo['no_image'] ?? '/images/uploads/no-image.webp'))) ?>" alt="<?= htmlspecialchars($page_data['title']) ?>">
   </div>
   <?php endif; ?>
   <div class="detail-body">

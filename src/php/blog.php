@@ -10,7 +10,7 @@ foreach ($files as $f) {
 }
 usort($items, fn($a, $b) => strcmp($b['date'], $a['date']));
 ?>
-<div class="breadcrumb"><a href="/">HOME</a><span>›</span>ブログ</div>
+<div class="breadcrumb"><a href="<?= $base_path ?>">HOME</a><span>›</span>ブログ</div>
 <div class="page-hero">
   <p class="section-label">Blog</p>
   <h1 class="section-title">ブログ</h1>
@@ -24,11 +24,11 @@ usort($items, fn($a, $b) => strcmp($b['date'], $a['date']));
     $cat_slug_b = '';
     foreach ($cats as $c) { if ($c['label'] === $item['cat']) { $cat_slug_b = $c['slug']; break; } }
   ?>
-  <a href="/news/<?= $item['id'] ?>" class="blog-card reveal">
+  <a href="<?= $base_path ?>news/<?= $item['id'] ?>" class="blog-card reveal">
     <?php if (!empty($item['thumbnail'])): ?>
-      <img class="blog-thumb" src="<?= htmlspecialchars($item['thumbnail']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy">
+      <img class="blog-thumb" src="<?= htmlspecialchars(flatcms_asset($item['thumbnail'])) ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy">
     <?php else: ?>
-      <img class="blog-thumb" src="<?= htmlspecialchars($seo['no_image'] ?? '/images/uploads/no-image.webp') ?>" alt="No Image" loading="lazy">
+      <img class="blog-thumb" src="<?= htmlspecialchars(flatcms_asset($seo['no_image'] ?? '/images/uploads/no-image.webp')) ?>" alt="No Image" loading="lazy">
     <?php endif; ?>
     <div class="blog-card-body">
       <div class="blog-meta">

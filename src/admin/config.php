@@ -3,7 +3,7 @@
 // 設定ファイル - インストール後に自動生成されます
 // ===================================================
 
-$config_file = dirname(__DIR__) . '/data/config.json';
+$config_file = __DIR__ . '/config.json';
 
 // 未インストールの場合はインストーラーへ
 if (!file_exists($config_file)) {

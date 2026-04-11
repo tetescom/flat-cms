@@ -1,5 +1,4 @@
-Deny from all
+Require all denied
 <Files "style.css">
-  Allow from all
-  Satisfy Any
+  Require all granted
 </Files>

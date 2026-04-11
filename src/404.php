@@ -56,7 +56,7 @@ include __DIR__ . '/php/header.php';
   <div class="notfound-code">404</div>
   <p class="notfound-title">Page Not Found</p>
   <p class="notfound-text">お探しのページは見つかりませんでした。<br>移動または削除された可能性があります。</p>
-  <a href="/" class="notfound-btn">トップへ戻る</a>
+  <a href="<?= $base_path ?>" class="notfound-btn">トップへ戻る</a>
 </div>
 
 <?php include __DIR__ . '/php/footer.php'; ?>

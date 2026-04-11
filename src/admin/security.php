@@ -2,7 +2,7 @@
 require_once './config.php';
 require_login();
 
-$config_file = dirname(__DIR__) . '/data/config.json';
+$config_file = __DIR__ . '/config.json';
 $config = json_decode(file_get_contents($config_file), true) ?? [];
 
 $err = '';

@@ -1,5 +1,5 @@
 <?php
-$config_file = dirname(__DIR__) . '/data/config.json';
+$config_file = __DIR__ . '/config.json';
 
 if (file_exists($config_file)) {
     header('Location: ./index.php');
@@ -17,6 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $smtp_user   = trim($_POST['smtp_user'] ?? '');
     $smtp_pass   = trim($_POST['smtp_pass'] ?? '');
     $smtp_port   = (int)($_POST['smtp_port'] ?? 587);
+    // base_path の正規化（先頭・末尾に / を付与）
+    $base_path_val = trim($_POST['base_path'] ?? '/');
+    if ($base_path_val === '' || $base_path_val === '/') {
+        $base_path_val = '/';
+    } else {
+        if (!str_starts_with($base_path_val, '/')) $base_path_val = '/' . $base_path_val;
+        if (!str_ends_with($base_path_val, '/'))   $base_path_val .= '/';
+    }
 
     if (empty($site_title))       $err = 'サイトタイトルを入力してください。';
     elseif (empty($admin_user))   $err = 'ユーザー名を入力してください。';
@@ -32,9 +40,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'smtp_user'    => $smtp_user,
             'smtp_pass'    => $smtp_pass,
             'smtp_port'    => $smtp_port,
+            'base_path'    => $base_path_val,
             'installed_at' => date('Y-m-d H:i:s'),
         ];
         file_put_contents($config_file, json_encode($config, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+
+        // .htaccess を base_path に合わせて更新
+        $htaccess_file = dirname(__DIR__) . '/.htaccess';
+        if (file_exists($htaccess_file)) {
+            $ht = file_get_contents($htaccess_file);
+            $ht = preg_replace('/ErrorDocument 404 \S+/', 'ErrorDocument 404 ' . $base_path_val . '404.php', $ht);
+            $ht = preg_replace('/\nRewriteBase \S+/', '', $ht);
+            $ht = preg_replace('/RewriteEngine On/', 'RewriteEngine On' . "\nRewriteBase " . $base_path_val, $ht);
+            file_put_contents($htaccess_file, $ht);
+        }
 
         // seo.json にサイトタイトルを書き込み
         $seo_file = dirname(__DIR__) . '/data/seo.json';
@@ -177,6 +196,11 @@ function _flatcms_send_mail($host, $port, $user, $pass, $to, $subject, $body) {
     <div class="form-group">
       <label>サイトタイトル <span class="required">必須</span></label>
       <input type="text" name="site_title" value="<?= htmlspecialchars($_POST['site_title'] ?? '') ?>" placeholder="例：Aroma Coffee" required>
+    </div>
+    <div class="form-group">
+      <label>インストールパス <span class="optional">任意</span></label>
+      <input type="text" name="base_path" value="<?= htmlspecialchars($_POST['base_path'] ?? '/') ?>" placeholder="/" style="max-width:200px;">
+      <small>ドメインルートにインストールする場合は / のままでOK。サブディレクトリの場合は例：/mysite/</small>
     </div>
 
     <p class="section-label">管理者アカウント</p>

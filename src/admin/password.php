@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_pass = $_POST['new_pass'] ?? '';
     $confirm  = $_POST['confirm_pass'] ?? '';
 
-    $config_file = dirname(__DIR__) . '/data/config.json';
+    $config_file = __DIR__ . '/config.json';
     $config = json_decode(file_get_contents($config_file), true);
 
     if (!password_verify($current, $config['admin_pass'])) {

@@ -17,7 +17,7 @@ robocopy $SrcDir $TempDir /E `
 
 # Remove files not for distribution
 $removeFiles = @(
-    "data\config.json",
+    "admin\config.json",
     "php\news-data.php",
     "php\news-detail.php"
 )
@@ -31,7 +31,8 @@ $seoPath = "$TempDir\data\seo.json"
 if (Test-Path $seoPath) {
     $seo = Get-Content $seoPath -Raw -Encoding UTF8 | ConvertFrom-Json
     $seo.contact_email = ""
-    $seo | ConvertTo-Json -Depth 3 | Set-Content $seoPath -Encoding UTF8
+    $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+    [System.IO.File]::WriteAllText($seoPath, ($seo | ConvertTo-Json -Depth 3), $utf8NoBom)
 }
 
 # sns.json - clear actual URLs
@@ -44,7 +45,7 @@ if (Test-Path $seoPath) {
     "facebook": "",
     "tiktok": ""
 }
-"@ | Set-Content "$TempDir\data\sns.json" -Encoding UTF8
+"@ | ForEach-Object { [System.IO.File]::WriteAllText("$TempDir\data\sns.json", $_, [System.Text.UTF8Encoding]::new($false)) }
 
 Write-Host "Creating ZIP..." -ForegroundColor Cyan
 
@@ -63,8 +64,10 @@ Get-ChildItem $TempDir -Recurse -File | ForEach-Object {
     Add-ToZip $zipFile $_.FullName $rel
 }
 
-# Add manual.html at root
-Add-ToZip $zipFile "$PSScriptRoot\manual.html" "manual.html"
+# Add manual.html at root (if exists)
+if (Test-Path "$PSScriptRoot\manual.html") {
+    Add-ToZip $zipFile "$PSScriptRoot\manual.html" "manual.html"
+}
 
 $zipFile.Dispose()
 

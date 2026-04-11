@@ -31,7 +31,7 @@ if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_to
 }
 
 // 設定を読み込み
-$config_file = dirname(__DIR__) . '/data/config.json';
+$config_file = dirname(__DIR__) . '/admin/config.json';
 $config = file_exists($config_file) ? json_decode(file_get_contents($config_file), true) ?? [] : [];
 $seo_file = dirname(__DIR__) . '/data/seo.json';
 $seo = file_exists($seo_file) ? json_decode(file_get_contents($seo_file), true) ?? [] : [];

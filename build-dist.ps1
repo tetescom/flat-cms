@@ -17,7 +17,7 @@ robocopy $SrcDir $TempDir /E `
 
 # Remove files not for distribution
 $removeFiles = @(
-    "data\config.json",
+    "admin\config.json",
     "php\news-data.php",
     "php\news-detail.php"
 )
@@ -30,14 +30,17 @@ foreach ($f in $removeFiles) {
 $newsDir = "$TempDir\data\news"
 if (Test-Path $newsDir) { Remove-Item "$newsDir\*" -Force }
 
-# Keep only no-image.webp in uploads
+# Keep only no-image.webp in uploads, remove hero.webp from images root
 $uploadsDir = "$TempDir\images\uploads"
 if (Test-Path $uploadsDir) {
     Get-ChildItem $uploadsDir | Where-Object { $_.Name -ne "no-image.webp" } | Remove-Item -Force
 }
+$heroPath = "$TempDir\images\hero.webp"
+if (Test-Path $heroPath) { Remove-Item $heroPath -Force }
 
 # seo.json - sanitized sample (remove personal info)
-@"
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+[System.IO.File]::WriteAllText("$TempDir\data\seo.json", @"
 {
     "site_title": "Site Name",
     "title_separator": " | ",
@@ -56,10 +59,10 @@ if (Test-Path $uploadsDir) {
     "hero_desc": "",
     "contact_email": ""
 }
-"@ | Set-Content "$TempDir\data\seo.json" -Encoding UTF8
+"@, $utf8NoBom)
 
 # sns.json - all empty
-@"
+[System.IO.File]::WriteAllText("$TempDir\data\sns.json", @"
 {
     "x": "",
     "instagram": "",
@@ -68,10 +71,10 @@ if (Test-Path $uploadsDir) {
     "facebook": "",
     "tiktok": ""
 }
-"@ | Set-Content "$TempDir\data\sns.json" -Encoding UTF8
+"@, $utf8NoBom)
 
 # works_order.json - empty
-"[]" | Set-Content "$TempDir\data\works_order.json" -Encoding UTF8
+[System.IO.File]::WriteAllText("$TempDir\data\works_order.json", "[]", $utf8NoBom)
 
 Write-Host "Creating ZIP..." -ForegroundColor Cyan
 Compress-Archive -Path "$TempDir\*" -DestinationPath $OutZip

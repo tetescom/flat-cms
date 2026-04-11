@@ -3,15 +3,15 @@ $page_title = '最新情報';
 $cats = json_decode(file_get_contents(dirname(__DIR__) . '/data/categories.json'), true) ?? [];
 include __DIR__ . '/header.php';
 ?>
-<div class="breadcrumb"><a href="/">HOME</a><span>›</span>最新情報</div>
+<div class="breadcrumb"><a href="<?= $base_path ?>">HOME</a><span>›</span>最新情報</div>
 <div class="page-hero">
   <p class="section-label">News</p>
   <h1 class="section-title">最新情報</h1>
 </div>
 <div class="cat-nav">
-  <a href="/news" class="active">すべて</a>
+  <a href="<?= $base_path ?>news" class="active">すべて</a>
   <?php foreach ($cats as $cat): ?>
-  <a href="/category/<?= htmlspecialchars($cat['slug']) ?>"><?= htmlspecialchars($cat['label']) ?></a>
+  <a href="<?= $base_path ?>category/<?= htmlspecialchars($cat['slug']) ?>"><?= htmlspecialchars($cat['label']) ?></a>
   <?php endforeach; ?>
 </div>
 <?php
@@ -35,10 +35,10 @@ foreach ($cats as $c) $cat_slugs[$c['label']] = $c['slug'];
 <?php foreach ($items as $item):
   $cat_slug = $cat_slugs[$item['cat']] ?? '';
 ?>
-  <a href="/news/<?= $item['id'] ?>" class="news-page-item reveal">
+  <a href="<?= $base_path ?>news/<?= $item['id'] ?>" class="news-page-item reveal">
     <span class="news-page-date"><?= htmlspecialchars($item['date']) ?></span>
     <?php if ($cat_slug): ?>
-    <span class="news-page-cat" onclick="event.preventDefault();location.href='/category/<?= htmlspecialchars($cat_slug) ?>'"><?= htmlspecialchars($item['cat']) ?></span>
+    <span class="news-page-cat" onclick="event.preventDefault();location.href='<?= $base_path ?>category/<?= htmlspecialchars($cat_slug) ?>'"><?= htmlspecialchars($item['cat']) ?></span>
     <?php else: ?>
     <span class="news-page-cat"><?= htmlspecialchars($item['cat']) ?></span>
     <?php endif; ?>
