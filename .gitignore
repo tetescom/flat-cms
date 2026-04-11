@@ -6,6 +6,7 @@ flatcms-dist.zip
 flatcms-demo.zip
 _dist_tmp/
 _demo_tmp/
+manual.html
 
 # デモ画像（著作権あり）
 src/images/uploads/hero.webp
