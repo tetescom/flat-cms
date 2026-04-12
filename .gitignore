@@ -1,5 +1,9 @@
 # 個人情報・認証情報
 src/data/config.json
+src/admin/config.json
+
+# ランディングページ（別管理）
+flat-cms-site/
 
 # ビルド生成物
 flatcms-dist.zip

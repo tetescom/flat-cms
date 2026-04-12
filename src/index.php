@@ -8,7 +8,9 @@ $about = file_exists($about_file) ? json_decode(file_get_contents($about_file), 
 <!-- HERO -->
 <section id="hero">
   <div class="hero-bg"></div>
-  <div class="hero-photo" <?php if (!empty($seo['hero_image'])): ?>style="background-image:url('<?= htmlspecialchars(flatcms_asset($seo['hero_image'])) ?>')"<?php endif; ?>></div>
+  <div class="hero-photo">
+    <img src="<?= htmlspecialchars(flatcms_asset(!empty($seo['hero_image']) ? $seo['hero_image'] : '/images/hero.webp')) ?>" alt="" fetchpriority="high" loading="eager">
+  </div>
   <div class="hero-line"></div>
   <div class="hero-counter">AROMA COFFEE — SINCE 2019</div>
   <div class="hero-content">
@@ -235,19 +237,19 @@ foreach ($form_fields as $field) {
     $req   = $freq ? ' required' : '';
     $badge = $freq ? ' <span class="required-badge">必須</span>' : '';
     echo '<div class="form-group">';
-    echo '<label>' . $flab . $badge . '</label>';
+    echo '<label for="field-' . $fid . '">' . $flab . $badge . '</label>';
     switch ($ftype) {
         case 'text': case 'tel':
-            echo '<input type="' . $ftype . '" name="' . $fid . '"' . $req . '>';
+            echo '<input type="' . $ftype . '" id="field-' . $fid . '" name="' . $fid . '"' . $req . '>';
             break;
         case 'email':
-            echo '<input type="email" name="' . $fid . '"' . $req . '>';
+            echo '<input type="email" id="field-' . $fid . '" name="' . $fid . '"' . $req . '>';
             break;
         case 'textarea':
-            echo '<textarea name="' . $fid . '"' . $req . '></textarea>';
+            echo '<textarea id="field-' . $fid . '" name="' . $fid . '"' . $req . '></textarea>';
             break;
         case 'select':
-            echo '<select name="' . $fid . '"' . $req . '>';
+            echo '<select id="field-' . $fid . '" name="' . $fid . '"' . $req . '>';
             echo '<option value="">選択してください</option>';
             foreach ($field['options'] as $opt) {
                 $o = htmlspecialchars($opt);

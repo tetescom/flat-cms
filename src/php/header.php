@@ -73,7 +73,9 @@ $og_url   = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['H
 </script>
 <?php endif; ?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Noto+Serif+JP:wght@200;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"></noscript>
 <link rel="stylesheet" href="<?= $base_path ?>data/style.css">
 <?php
 // デザイン設定からカラーを動的生成

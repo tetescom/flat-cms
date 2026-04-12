@@ -27,18 +27,17 @@
   }
 
   // Parallax
-  const heroPhoto = document.querySelector('.hero-photo');
+  const heroImg = document.querySelector('.hero-photo img');
   window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (heroPhoto) heroPhoto.style.backgroundPosition = `center calc(50% + ${y * 0.4}px)`;
-  });
+    if (heroImg) heroImg.style.objectPosition = `center calc(50% + ${window.scrollY * 0.4}px)`;
+  }, { passive: true });
 
   // Page top
   const pagetop = document.getElementById('pagetop');
   if (pagetop) {
     window.addEventListener('scroll', () => {
       pagetop.classList.toggle('visible', window.scrollY > 400);
-    });
+    }, { passive: true });
     pagetop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 

@@ -47,6 +47,17 @@ if (Test-Path $seoPath) {
 }
 "@ | ForEach-Object { [System.IO.File]::WriteAllText("$TempDir\data\sns.json", $_, [System.Text.UTF8Encoding]::new($false)) }
 
+# Minify style.css
+$cssPath = "$TempDir\data\style.css"
+if (Test-Path $cssPath) {
+    $css = Get-Content $cssPath -Raw -Encoding UTF8
+    $css = [regex]::Replace($css, '/\*[\s\S]*?\*/', '')  # remove comments
+    $css = [regex]::Replace($css, '\s+', ' ')             # collapse whitespace
+    $css = $css -replace ' *\{ *', '{' -replace ' *\} *', '}' -replace ' *: *', ':' -replace ' *; *', ';' -replace ' *, *', ','
+    $css = $css.Trim()
+    [System.IO.File]::WriteAllText($cssPath, $css, [System.Text.UTF8Encoding]::new($false))
+}
+
 Write-Host "Creating ZIP..." -ForegroundColor Cyan
 
 # Create zip with manual at root and src files in a subfolder

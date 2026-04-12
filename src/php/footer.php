@@ -33,6 +33,6 @@ $sns_icons = [
   </div>
 </footer>
 
-<script src="<?= $base_path ?>js/main.js"></script>
+<script src="<?= $base_path ?>js/main.js" defer></script>
 </body>
 </html>
