@@ -5,6 +5,9 @@ src/admin/config.json
 # ランディングページ（別管理）
 flat-cms-site/
 
+# 別案件
+src/contract_generator/
+
 # ビルド生成物
 flatcms-dist.zip
 flatcms-demo.zip
