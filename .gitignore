@@ -16,6 +16,7 @@ _demo_tmp/
 manual.html
 
 # デモ画像（著作権あり）
+src/images/hero.webp
 src/images/uploads/hero.webp
 src/images/uploads/cake.webp
 src/images/uploads/coffee.webp
