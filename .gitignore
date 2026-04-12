@@ -15,13 +15,8 @@ _dist_tmp/
 _demo_tmp/
 manual.html
 
-# デモ画像（著作権あり）
-src/images/hero.webp
-src/images/uploads/hero.webp
-src/images/uploads/cake.webp
-src/images/uploads/coffee.webp
-src/images/uploads/interior.webp
-src/images/uploads/menu.webp
+# 画像（GitHubには含めない）
+src/images/
 
 # ゴミ箱データ
 src/data/trash/
