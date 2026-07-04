@@ -18,6 +18,7 @@ robocopy $SrcDir $TempDir /E `
 # Remove files not for distribution
 $removeFiles = @(
     "admin\config.json",
+    "data\config.json",
     "php\news-data.php",
     "php\news-detail.php"
 )

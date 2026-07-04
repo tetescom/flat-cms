@@ -7,8 +7,8 @@ $_site_title = $_seo['site_title'] ?? 'Flat CMS';
   <a href="../" target="_blank" class="sidebar-logo" style="text-decoration:none;"><?= htmlspecialchars($_site_title) ?><br><span style="font-size:9px;opacity:0.5;letter-spacing:0.15em;">ADMIN</span></a>
   <nav class="sidebar-nav">
     <a href="./dashboard.php" <?= basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'class="active"' : '' ?>>Dashboard</a>
-    <a href="./post-list.php" <?= in_array(basename($_SERVER['PHP_SELF']), ['post-list.php','post-edit.php']) ? 'class="active"' : '' ?>>投稿</a>
-    <a href="./pages-list.php" <?= in_array(basename($_SERVER['PHP_SELF']), ['pages-list.php','pages-edit.php']) ? 'class="active"' : '' ?>>固定ページ</a>
+    <a href="./post-list.php" <?= in_array(basename($_SERVER['PHP_SELF']), ['post-list.php']) ? 'class="active"' : '' ?>>投稿</a>
+    <a href="./pages-list.php" <?= in_array(basename($_SERVER['PHP_SELF']), ['pages-list.php']) ? 'class="active"' : '' ?>>固定ページ</a>
     <a href="./trash.php" <?= basename($_SERVER['PHP_SELF']) === 'trash.php' ? 'class="active"' : '' ?>>ゴミ箱</a>
     <a href="./categories.php" <?= basename($_SERVER['PHP_SELF']) === 'categories.php' ? 'class="active"' : '' ?>>カテゴリー</a>
     <a href="./media.php" <?= basename($_SERVER['PHP_SELF']) === 'media.php' ? 'class="active"' : '' ?>>メディア</a>
