@@ -1,7 +1,18 @@
 <?php
 header('Content-Type: application/xml; charset=utf-8');
 
-$base_url = 'https://' . $_SERVER['HTTP_HOST'];
+// サイトURLは seo.json の site_url を最優先。無ければ実際のスキーム＋ホスト＋base_path。
+$seo_file = __DIR__ . '/data/seo.json';
+$seo = file_exists($seo_file) ? json_decode(file_get_contents($seo_file), true) ?? [] : [];
+$cfg_file = __DIR__ . '/admin/config.json';
+$base_path = file_exists($cfg_file) ? (json_decode(file_get_contents($cfg_file), true)['base_path'] ?? '/') : '/';
+
+if (!empty($seo['site_url'])) {
+    $base_url = rtrim($seo['site_url'], '/');
+} else {
+    $scheme  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $base_url = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? '') . rtrim($base_path, '/');
+}
 
 // 固定ページ一覧
 $pages = [];
