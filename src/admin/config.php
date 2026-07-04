@@ -62,7 +62,12 @@ function verify_csrf() {
 }
 
 function save_json($path, $data) {
-    file_put_contents($path, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    $result = file_put_contents($path, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    if ($result === false) {
+        // サイレントなデータ消失を防ぐ（共有サーバーの書き込み権限不足など）
+        die('保存に失敗しました。data フォルダとその配下の書き込み権限（パーミッション）を確認してください。');
+    }
+    return true;
 }
 
 function load_json($path) {

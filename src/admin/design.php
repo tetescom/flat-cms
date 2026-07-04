@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // アクセントカラー
     $accent = preg_match('/^#[0-9a-fA-F]{6}$/', $_POST['accent'] ?? '') ? $_POST['accent'] : '#7c5c3a';
     $design['accent'] = $accent;
-    file_put_contents($design_file, json_encode($design, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    save_json($design_file, $design);
 
     // 画像設定はseo.jsonに保存
     // 生値で保存（表示側で htmlspecialchars。二重エスケープ防止）
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $seo['hero_desc']  = trim($_POST['hero_desc'] ?? '');
     $seo['og_image']   = trim($_POST['og_image'] ?? '');
     $seo['no_image']   = trim($_POST['no_image'] ?? '');
-    file_put_contents($seo_file, json_encode($seo, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    save_json($seo_file, $seo);
 
     // About設定保存
     if (isset($_POST['about_title']) || isset($_POST['about_text']) || isset($_POST['about_mission'])) {
@@ -42,14 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $about['hours']     = trim($_POST['about_hours'] ?? '');
         $about['map_embed'] = trim($_POST['about_map'] ?? '');
         $about['blocks']    = [['type' => 'text', 'text' => trim($_POST['about_text'] ?? '')]];
-        file_put_contents($about_file, json_encode($about, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        save_json($about_file, $about);
     }
 
     // Works並び順保存
     if (isset($_POST['works_order'])) {
         $new_order = array_filter(array_map('trim', explode(',', $_POST['works_order'])));
         $works_order_file = dirname(__DIR__) . '/data/works_order.json';
-        file_put_contents($works_order_file, json_encode(array_values($new_order), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        save_json($works_order_file, array_values($new_order));
     }
 
     $msg = '保存しました。';
