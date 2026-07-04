@@ -5,12 +5,14 @@ $id = isset($_GET['id']) ? basename($_GET['id']) : '';
 $data_dir = dirname(__DIR__) . '/data/news/';
 $file = $data_dir . $id . '.json';
 
-if (!$id || !file_exists($file)) {
+$article = (!$id || !file_exists($file)) ? null : json_decode(file_get_contents($file), true);
+
+// ファイルが無い／JSONが壊れている場合は一覧へ
+if (!is_array($article)) {
     $_bp_cfg = __DIR__ . '/../admin/config.json';
     $_bp = file_exists($_bp_cfg) ? (json_decode(file_get_contents($_bp_cfg), true)['base_path'] ?? '/') : '/';
     header('Location: ' . $_bp . 'news'); exit;
 }
-$article = json_decode(file_get_contents($file), true);
 
 // 前後の記事を取得
 $files = glob($data_dir . '*.json');
