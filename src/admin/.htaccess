@@ -1,0 +1,5 @@
+# 設定ファイル等の機微データへのWebアクセスを拒否
+# config.json には管理者ハッシュ・SMTPパスワード等が含まれるため必須
+<FilesMatch "\.(json|log|bak)$">
+  Require all denied
+</FilesMatch>
