@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config.php';
+require_login();
 require_once __DIR__ . '/../php/design-colors.php';
 
 $design_file = dirname(__DIR__) . '/data/design.json';
