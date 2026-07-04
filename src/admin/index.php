@@ -42,20 +42,27 @@ $captcha_svg = "<svg xmlns='http://www.w3.org/2000/svg' width='180' height='60' 
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $captcha_ok = isset($_POST['captcha'], $_SESSION['captcha_text'])
-        && mb_convert_kana(trim($_POST['captcha']), 'c', 'UTF-8') === $_SESSION['captcha_text'];
-    unset($_SESSION['captcha_text']);
-    // エラー後のCAPTCHA再生成はAjaxで行うのでここでは何もしない
-
-    if (!$captcha_ok) {
-        $error = '画像認証が正しくありません。';
-    } elseif ($_POST['username'] === ADMIN_USER && password_verify($_POST['password'], ADMIN_PASS)) {
-        $_SESSION['admin_logged_in'] = true;
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        header('Location: ./dashboard.php');
-        exit;
+    if (!check_login_attempts()) {
+        // 同一IPで5回失敗すると15分ロック（config.php の関数群）
+        $error = 'ログイン試行回数の上限に達しました。約15分後に再度お試しください。';
     } else {
-        $error = 'ユーザー名またはパスワードが違います。';
+        $captcha_ok = isset($_POST['captcha'], $_SESSION['captcha_text'])
+            && mb_convert_kana(trim($_POST['captcha']), 'c', 'UTF-8') === $_SESSION['captcha_text'];
+        unset($_SESSION['captcha_text']);
+        // エラー後のCAPTCHA再生成はAjaxで行うのでここでは何もしない
+
+        if (!$captcha_ok) {
+            $error = '画像認証が正しくありません。';
+        } elseif (($_POST['username'] ?? '') === ADMIN_USER && password_verify($_POST['password'] ?? '', ADMIN_PASS)) {
+            clear_login_attempts();
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            header('Location: ./dashboard.php');
+            exit;
+        } else {
+            record_login_attempt();
+            $error = 'ユーザー名またはパスワードが違います。';
+        }
     }
 }
 
