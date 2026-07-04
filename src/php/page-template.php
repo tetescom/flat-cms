@@ -1,5 +1,10 @@
 <?php
 require_once __DIR__ . '/render-blocks.php';
+// JSONが欠落／破損している場合（削除済みページの孤児PHP等）は404を返す
+if (!is_array($page_data ?? null)) {
+    include dirname(__DIR__) . '/404.php';
+    exit;
+}
 $page_title = $page_data['title'] ?? '';
 $og_image   = $page_data['thumbnail'] ?? '';
 $og_desc    = !empty($page_data['blocks']) ? strip_tags($page_data['blocks'][0]['text'] ?? '') : '';

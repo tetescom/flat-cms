@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $page_dir = dirname(__DIR__) . '/pages/';
         if (!is_dir($page_dir)) mkdir($page_dir);
         file_put_contents($page_dir . $slug . '.php',
-            "<?php\n\$page_data = json_decode(file_get_contents(dirname(__DIR__) . '/data/pages/{$new_id}.json'), true);\ninclude dirname(__DIR__) . '/php/page-template.php';\n"
+            "<?php\n\$__pf = dirname(__DIR__) . '/data/pages/{$new_id}.json';\n\$page_data = is_file(\$__pf) ? json_decode(file_get_contents(\$__pf), true) : null;\ninclude dirname(__DIR__) . '/php/page-template.php';\n"
         );
     }
 

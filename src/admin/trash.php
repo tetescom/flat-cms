@@ -14,6 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['restore'])) {
         $dest = ($type === 'page') ? PAGES_DIR : NEWS_DIR;
         save_json($dest . $id . '.json', $data);
         unlink($file);
+        // 固定ページは公開用PHPを復元時に再生成する（削除時に消しているため）
+        if ($type === 'page') {
+            $slug = preg_replace('/[^a-z0-9\-]/', '', strtolower($data['slug'] ?? '')) ?: $id;
+            $page_dir = dirname(__DIR__) . '/pages/';
+            if (!is_dir($page_dir)) mkdir($page_dir);
+            file_put_contents($page_dir . $slug . '.php',
+                "<?php\n\$__pf = dirname(__DIR__) . '/data/pages/{$id}.json';\n\$page_data = is_file(\$__pf) ? json_decode(file_get_contents(\$__pf), true) : null;\ninclude dirname(__DIR__) . '/php/page-template.php';\n"
+            );
+        }
         $back = ($type === 'page') ? 'pages-list.php' : 'post-list.php';
         header('Location: ./' . $back . '?msg=restored');
         exit;
@@ -25,7 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['purge'])) {
     verify_csrf();
     $id   = basename($_POST['purge']);
     $file = TRASH_DIR . $id . '.json';
-    if (file_exists($file)) unlink($file);
+    if (file_exists($file)) {
+        // 念のため、残っている公開用PHPがあれば除去
+        $data = load_json($file);
+        if (($data['_trash_type'] ?? '') === 'page') {
+            $slug = $data['slug'] ?? '';
+            if ($slug !== '') {
+                $php = dirname(__DIR__) . '/pages/' . basename($slug) . '.php';
+                if (file_exists($php)) unlink($php);
+            }
+        }
+        unlink($file);
+    }
     header('Location: ./trash.php?msg=purged');
     exit;
 }

@@ -31,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!is_dir($page_dir)) mkdir($page_dir);
     $page_php = <<<PHP
 <?php
-\$page_data = json_decode(file_get_contents(dirname(__DIR__) . '/data/pages/{$new_id}.json'), true);
+\$__pf = dirname(__DIR__) . '/data/pages/{$new_id}.json';
+\$page_data = is_file(\$__pf) ? json_decode(file_get_contents(\$__pf), true) : null;
 include dirname(__DIR__) . '/php/page-template.php';
 PHP;
     file_put_contents($page_dir . $slug . '.php', $page_php);

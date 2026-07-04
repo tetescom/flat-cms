@@ -12,6 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
         $data['_trash_date'] = date('Y-m-d H:i:s');
         save_json(TRASH_DIR . $id . '.json', $data);
         unlink($file);
+        // 自動生成した公開用PHPも削除（孤児化して壊れたページが残るのを防ぐ）
+        $slug = $data['slug'] ?? '';
+        if ($slug !== '') {
+            $php = dirname(__DIR__) . '/pages/' . basename($slug) . '.php';
+            if (file_exists($php)) unlink($php);
+        }
     }
     header('Location: ./pages-list.php?msg=trashed');
     exit;
