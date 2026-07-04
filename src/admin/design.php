@@ -19,26 +19,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     file_put_contents($design_file, json_encode($design, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
     // 画像設定はseo.jsonに保存
-    $seo['favicon']    = htmlspecialchars(trim($_POST['favicon'] ?? ''));
-    $seo['logo_image'] = htmlspecialchars(trim($_POST['logo_image'] ?? ''));
-    $seo['hero_image'] = htmlspecialchars(trim($_POST['hero_image'] ?? ''));
-    $seo['hero_sub']   = htmlspecialchars(trim($_POST['hero_sub'] ?? ''));
-    $seo['hero_title']    = htmlspecialchars(trim($_POST['hero_title'] ?? ''));
-    $seo['hero_title_em'] = htmlspecialchars(trim($_POST['hero_title_em'] ?? ''));
-    $seo['hero_catch'] = htmlspecialchars(trim($_POST['hero_catch'] ?? ''));
-    $seo['hero_desc']  = htmlspecialchars(trim($_POST['hero_desc'] ?? ''));
-    $seo['og_image']   = htmlspecialchars(trim($_POST['og_image'] ?? ''));
-    $seo['no_image']   = htmlspecialchars(trim($_POST['no_image'] ?? ''));
+    // 生値で保存（表示側で htmlspecialchars。二重エスケープ防止）
+    $seo['favicon']    = trim($_POST['favicon'] ?? '');
+    $seo['logo_image'] = trim($_POST['logo_image'] ?? '');
+    $seo['hero_image'] = trim($_POST['hero_image'] ?? '');
+    $seo['hero_sub']   = trim($_POST['hero_sub'] ?? '');
+    $seo['hero_title']    = trim($_POST['hero_title'] ?? '');
+    $seo['hero_title_em'] = trim($_POST['hero_title_em'] ?? '');
+    $seo['hero_catch'] = trim($_POST['hero_catch'] ?? '');
+    $seo['hero_desc']  = trim($_POST['hero_desc'] ?? '');
+    $seo['og_image']   = trim($_POST['og_image'] ?? '');
+    $seo['no_image']   = trim($_POST['no_image'] ?? '');
     file_put_contents($seo_file, json_encode($seo, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
     // About設定保存
     if (isset($_POST['about_title']) || isset($_POST['about_text']) || isset($_POST['about_mission'])) {
         $about_file = dirname(__DIR__) . '/data/pages/about.json';
         $about = file_exists($about_file) ? json_decode(file_get_contents($about_file), true) ?? [] : [];
-        $about['title']     = htmlspecialchars(trim($_POST['about_title'] ?? ''));
-        $about['mission']   = htmlspecialchars(trim($_POST['about_mission'] ?? ''));
-        $about['address']   = htmlspecialchars(trim($_POST['about_address'] ?? ''));
-        $about['hours']     = htmlspecialchars(trim($_POST['about_hours'] ?? ''));
+        $about['title']     = trim($_POST['about_title'] ?? '');
+        $about['mission']   = trim($_POST['about_mission'] ?? '');
+        $about['address']   = trim($_POST['about_address'] ?? '');
+        $about['hours']     = trim($_POST['about_hours'] ?? '');
         $about['map_embed'] = trim($_POST['about_map'] ?? '');
         $about['blocks']    = [['type' => 'text', 'text' => trim($_POST['about_text'] ?? '')]];
         file_put_contents($about_file, json_encode($about, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));

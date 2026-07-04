@@ -6,16 +6,17 @@ $seo_file = DATA_DIR . 'seo.json';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
+    // 生値で保存する（表示側で htmlspecialchars する。二重エスケープ防止）
     $data = [
-        'site_title'           => htmlspecialchars($_POST['site_title'] ?? ''),
-        'title_separator'      => htmlspecialchars($_POST['title_separator'] ?? ' — '),
-        'description'          => htmlspecialchars($_POST['description'] ?? ''),
-        'keywords'             => htmlspecialchars($_POST['keywords'] ?? ''),
-        'contact_email'        => htmlspecialchars(trim($_POST['contact_email'] ?? '')),
-        'copyright'            => htmlspecialchars(trim($_POST['copyright'] ?? '')),
-        'site_url'             => htmlspecialchars(rtrim($_POST['site_url'] ?? '', '/')),
+        'site_title'           => $_POST['site_title'] ?? '',
+        'title_separator'      => $_POST['title_separator'] ?? ' — ',
+        'description'          => $_POST['description'] ?? '',
+        'keywords'             => $_POST['keywords'] ?? '',
+        'contact_email'        => trim($_POST['contact_email'] ?? ''),
+        'copyright'            => trim($_POST['copyright'] ?? ''),
+        'site_url'             => rtrim($_POST['site_url'] ?? '', '/'),
         'analytics_id'         => preg_replace('/[^A-Z0-9\-]/', '', strtoupper($_POST['analytics_id'] ?? '')),
-        'console_verification' => htmlspecialchars($_POST['console_verification'] ?? ''),
+        'console_verification' => $_POST['console_verification'] ?? '',
     ];
     save_json($seo_file, $data);
     header('Location: ./seo.php?msg=saved');

@@ -34,22 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_id = $id ?: uniqid();
     $blocks = json_decode($_POST['blocks_json'] ?? '[]', true) ?: [];
 
+    // 生値で保存（表示側で htmlspecialchars / render_blocks がエスケープ。二重エスケープ防止）
     $save = [
         'id'     => $new_id,
-        'title'     => htmlspecialchars($_POST['title'] ?? ''),
-        'thumbnail' => htmlspecialchars($_POST['thumbnail'] ?? ''),
+        'title'     => $_POST['title'] ?? '',
+        'thumbnail' => $_POST['thumbnail'] ?? '',
         'blocks' => $blocks,
     ];
 
     if ($type === 'news') {
-        $save['date'] = htmlspecialchars($_POST['date'] ?? date('Y.m.d'));
-        $save['cat']  = htmlspecialchars($_POST['cat'] ?? '');
+        $save['date'] = $_POST['date'] ?? date('Y.m.d');
+        $save['cat']  = $_POST['cat'] ?? '';
     } else {
         $slug = preg_replace('/[^a-z0-9\-]/', '', strtolower($_POST['slug'] ?? ''));
         $slug = $slug ?: $new_id;
         $save['slug']          = $slug;
-        $save['thumbnail']     = htmlspecialchars($_POST['thumbnail'] ?? '');
-        $save['cat']           = htmlspecialchars($_POST['cat'] ?? '');
+        $save['thumbnail']     = $_POST['thumbnail'] ?? '';
+        $save['cat']           = $_POST['cat'] ?? '';
         $save['show_in_works'] = isset($_POST['show_in_works']) ? true : false;
         // ページPHPファイルを自動生成
         $page_dir = dirname(__DIR__) . '/pages/';

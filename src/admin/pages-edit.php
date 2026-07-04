@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $slug = $slug ?: $new_id;
     $data = [
         'id'    => $new_id,
-        'title' => htmlspecialchars($_POST['title']),
+        'title' => $_POST['title'] ?? '',
         'slug'  => $slug,
         'body'  => $_POST['body'],
     ];

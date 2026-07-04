@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_id = $id ?: uniqid();
     $data = [
         'id'    => $new_id,
-        'date'  => htmlspecialchars($_POST['date']),
-        'cat'   => htmlspecialchars($_POST['cat']),
-        'title' => htmlspecialchars($_POST['title']),
+        'date'  => $_POST['date'] ?? '',
+        'cat'   => $_POST['cat'] ?? '',
+        'title' => $_POST['title'] ?? '',
         'body'  => $_POST['body'], // HTMLをそのまま保存
     ];
     save_json(NEWS_DIR . $new_id . '.json', $data);

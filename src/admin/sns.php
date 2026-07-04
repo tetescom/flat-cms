@@ -6,13 +6,14 @@ $sns_file = DATA_DIR . 'sns.json';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
+    // 生値で保存（表示側で htmlspecialchars。二重エスケープ防止）
     $data = [
-        'x'         => htmlspecialchars(trim($_POST['x'] ?? '')),
-        'instagram' => htmlspecialchars(trim($_POST['instagram'] ?? '')),
-        'youtube'   => htmlspecialchars(trim($_POST['youtube'] ?? '')),
-        'line'      => htmlspecialchars(trim($_POST['line'] ?? '')),
-        'facebook'  => htmlspecialchars(trim($_POST['facebook'] ?? '')),
-        'tiktok'    => htmlspecialchars(trim($_POST['tiktok'] ?? '')),
+        'x'         => trim($_POST['x'] ?? ''),
+        'instagram' => trim($_POST['instagram'] ?? ''),
+        'youtube'   => trim($_POST['youtube'] ?? ''),
+        'line'      => trim($_POST['line'] ?? ''),
+        'facebook'  => trim($_POST['facebook'] ?? ''),
+        'tiktok'    => trim($_POST['tiktok'] ?? ''),
     ];
     save_json($sns_file, $data);
     header('Location: ./sns.php?msg=saved');
