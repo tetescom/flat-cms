@@ -43,16 +43,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
             // 元画像を読み込み
             $img = null;
-            if ($real_mime === 'image/jpeg') $img = imagecreatefromjpeg($file['tmp_name']);
+            if ($real_mime === 'image/jpeg') $img = @imagecreatefromjpeg($file['tmp_name']);
             elseif ($real_mime === 'image/png') {
-                $img = imagecreatefrompng($file['tmp_name']);
-                // 透過を保持
-                imagepalettetotruecolor($img);
-                imagealphablending($img, true);
-                imagesavealpha($img, true);
+                $img = @imagecreatefrompng($file['tmp_name']);
+                // 読み込み成功時のみ透過を保持（壊れPNGは false が返るため）
+                if ($img) {
+                    imagepalettetotruecolor($img);
+                    imagealphablending($img, true);
+                    imagesavealpha($img, true);
+                }
             }
-            elseif ($real_mime === 'image/gif') $img = imagecreatefromgif($file['tmp_name']);
-            elseif ($real_mime === 'image/webp') $img = imagecreatefromwebp($file['tmp_name']);
+            elseif ($real_mime === 'image/gif') $img = @imagecreatefromgif($file['tmp_name']);
+            elseif ($real_mime === 'image/webp') $img = @imagecreatefromwebp($file['tmp_name']);
 
             if ($img) {
                 imagewebp($img, $dest, 82); // 品質82（軽さと画質のバランス）
